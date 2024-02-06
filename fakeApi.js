@@ -1,24 +1,26 @@
 const API_URL = "https://fakestoreapi.com";
 
 class API {
-  addProductToCart(productId) {
+  async addProductToCart(productId) {
     const body = JSON.stringify({
       userId: 3,
       date: "2024-02-05",
       products: [{ productId, quantity: 1 }],
     });
-    return fetch(`${API_URL}/carts/7`, {
+    await fetch(`${API_URL}/carts/7`, {
       method: "POST",
       body,
     });
   }
 
-  fetchAllProducts(params = {}) {
+  async fetchAllProducts(params = {}) {
     const queryParams = new URLSearchParams(params);
-    return fetch(`${API_URL}/products?${queryParams.toString()}`);
+    const res = await fetch(`${API_URL}/products?${queryParams.toString()}`);
+    const products = await res.json();
+
+    return products;
   }
 }
-
 
 const api = new API();
 
@@ -27,41 +29,43 @@ function handelError(err) {
   alert("Возникла ошибка при отправке запроса");
 }
 
-window.addEventListener("load", () => {
-  const productsList = document.querySelector(".products__list");
+async function renderProducts() {
+  try {
+    const productsList = document.querySelector(".products__list");
+    const products = await api.fetchAllProducts({ limit: 10 });
 
-  api
-    .fetchAllProducts({ limit: 10 })
-    .then((res) => res.json())
-    .then((products) => {
-      products.forEach((product) => {
-        const productListItem = document.createElement("li");
-        const productAddBtn = document.createElement("button");
+    products.forEach((product) => {
+      const productListItem = document.createElement("li");
+      const productAddBtn = document.createElement("button");
 
-        productListItem.classList.add("products__item");
-        productListItem.textContent = product.title;
+      productListItem.classList.add("products__item");
+      productListItem.textContent = product.title;
 
-        productAddBtn.classList.add("product__addBtn");
-        productAddBtn.textContent = "Добавить в корзину";
-        productAddBtn.setAttribute("data-product-id", product.id);
+      productAddBtn.classList.add("product__addBtn");
+      productAddBtn.textContent = "Добавить в корзину";
+      productAddBtn.setAttribute("data-product-id", product.id);
 
-        productListItem.append(productAddBtn);
-        productsList.append(productListItem);
-      });
-    })
-    .catch(handelError);
+      productListItem.append(productAddBtn);
+      productsList.append(productListItem);
+    });
+  } catch (err) {
+    handelError(err);
+  }
+}
 
-  productsList.addEventListener("click", (e) => {
-    if (e.target.tagName === "BUTTON") {
+window.addEventListener("load", () => renderProducts());
+
+const productsList = document.querySelector(".products__list");
+
+productsList.addEventListener("click", async (e) => {
+  if (e.target.tagName === "BUTTON") {
+    try {
       e.target.disabled = true;
-      api
-        .addProductToCart(e.target.getAttribute("data-product-id"))
-        .then(() => {
-          e.target.textContent = "Добавлено";
-        })
-        .catch(() => {
-          e.target.disabled = false;
-        });
+      await api.addProductToCart(e.target.getAttribute("data-product-id"));
+      e.target.textContent = "Добавлено";
+    } catch (err) {
+      console.log(`ошибка ${err}`);
+      e.target.disabled = false;
     }
-  });
+  }
 });

@@ -1,0 +1,58 @@
+/* Общие стили */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 20px auto;
+  }
+  
+  /* Стили для продуктов */
+  .products__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .products__item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .products__item:hover {
+    transform: scale(1.02);
+  }
+  
+  .product__addBtn {
+    padding: 10px 20px;
+    background-color: #1c9737;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  .product__addBtn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .product__addBtn:hover:enabled {
+    background-color: #cc0000;
+  }
+  
+  /* Стили для кнопок на Hover */
+  .product__addBtn:hover {
+    background-color: #cc0000;
+  }
+  
