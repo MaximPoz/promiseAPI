@@ -37,15 +37,20 @@ async function renderProducts() {
     products.forEach((product) => {
       const productListItem = document.createElement("li");
       const productAddBtn = document.createElement("button");
+      const productListImg = document.createElement("img")
 
       productListItem.classList.add("products__item");
       productListItem.textContent = product.title;
+
+      productListImg.classList.add("products__img");
+      productListImg.src = product.image;
 
       productAddBtn.classList.add("product__addBtn");
       productAddBtn.textContent = "Добавить в корзину";
       productAddBtn.setAttribute("data-product-id", product.id);
 
       productListItem.append(productAddBtn);
+      productListItem.append(productListImg);
       productsList.append(productListItem);
     });
   } catch (err) {
