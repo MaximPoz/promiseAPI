@@ -35,9 +35,13 @@ async function renderProducts() {
     const products = await api.fetchAllProducts({ limit: 10 });
 
     products.forEach((product) => {
-      const productListItem = document.createElement("li");
       const productAddBtn = document.createElement("button");
+      const productListItem = document.createElement("li");
       const productListImg = document.createElement("img")
+      const productListPrice = document.createElement("p")
+
+      productListPrice.classList.add("products__price");
+      productListPrice.textContent =  `Цена :${product.price}$`
 
       productListItem.classList.add("products__item");
       productListItem.textContent = product.title;
@@ -49,9 +53,11 @@ async function renderProducts() {
       productAddBtn.textContent = "Добавить в корзину";
       productAddBtn.setAttribute("data-product-id", product.id);
 
-      productListItem.append(productAddBtn);
-      productListItem.append(productListImg);
+      productListItem.append(productListPrice);
       productsList.append(productListItem);
+      productListItem.append(productListImg);
+      productListItem.append(productAddBtn);
+
     });
   } catch (err) {
     handelError(err);
